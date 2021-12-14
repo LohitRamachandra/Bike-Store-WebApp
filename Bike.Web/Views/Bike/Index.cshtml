@@ -1,0 +1,93 @@
+﻿@model cloudscribe.Pagination.Models.PagedResult<Motorcycle>
+@using Bike.Web.Helpers;
+@{
+    ViewData["Title"] = "Index";
+    ViewData["Controller"] = "Bike";
+    ViewData["Action"] = "Index";
+}
+@*<style>
+        button{margin:5px;}
+        a{margin:5px;}
+    </style>*@
+<br />
+<br />
+<form asp-action="Index" method="get">
+    <div>
+        <p>
+            Find Make: <input type="text" name="searchString" value="@ViewBag.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-info" /> |
+            <a asp-action="Index" class="btn btn-danger">Remove Filter</a>
+        </p>
+    </div>
+</form>
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-info">Bike List</h2>
+        </div>
+        @if (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.Executive))
+        {
+            <div class="col-6 text-right">
+                <a class="btn btn-info" asp-action="Create"><i class="fas fa-motorcycle"></i> &nbsp;Add New Model</a>
+            </div>
+        }
+        <br />
+        <div class="col-12">
+
+            <table class="table table-striped border shadow-lg">
+                <tr class="table-info">
+                    <th>Bike Photo</th>
+                    <th>Bike Details</th>
+                    <th><a asp-action="Index" asp-route-sortOrder="@ViewBag.PriceSortParam" asp-route-pageNumber="@Model.PageNumber">Price</a></th>
+                    <th>Seller Information</th>
+                    @if (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.Executive))
+                    {
+                        <th></th>
+                    }
+                    else
+                    {
+                        <th class="text-right">View Details</th>
+}
+                </tr>
+                @foreach (var item in Model.Data)
+                {
+                    <tr>
+                        <td><img src="@Url.Content(@item.ImagePath)" width="150px" height="100px" /></td>
+                        <td>
+                            <b>@Html.DisplayFor(m => item.Make.Name) @Html.DisplayFor(m => item.Year) </b> <br />
+                            <b>Model: </b>@Html.DisplayFor(m => item.Model.Name) <br />
+                            <b>Mileage: </b>@Html.DisplayFor(m => item.Mileage)
+                        </td>
+                        <td>@Html.DisplayFor(m => item.Price) @Html.DisplayFor(m => item.Currency)</td>
+                        <td>
+                            <b>Name: </b> @Html.DisplayFor(m => item.SellerName) <br />
+                            <b>Email: </b>@Html.DisplayFor(m => item.SellerEmail) <br />
+                            <b>Phone: </b>@Html.DisplayFor(m => item.SellerPhone)
+                        </td>
+
+                        @if (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.Executive))
+                        {
+                            <partial name="_TableButtonPartial" model="item.Id" view-data="ViewData" />
+                        }
+                        else
+                        {
+                            <td class="text-right">
+                                <div class="btn-group" role="group">
+                                    <form method="post" action="Edit">
+                                        <a type="button" class="btn btn-warning rounded-0" href='@Url.Action("View")/@item.Id'><i class="fas fa-search-plus"></i></a>
+                                    </form>
+
+                                </div>
+                            </td>
+                        }
+                    </tr>
+
+                }
+            </table>
+            <partial name="_PaginationPartial" model="Model" />
+
+        </div>
+    </div>
+
+
+</div>

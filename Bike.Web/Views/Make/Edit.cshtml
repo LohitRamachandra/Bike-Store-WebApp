@@ -1,0 +1,23 @@
+﻿@model Bike.Web.Models.Make;
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<br />
+<h2 class="text-info">Edit Make of Vehicle</h2>
+<form method="post" action="Edit">
+    <div class="form-group row">
+        <div class="col-2">
+            <label asp-for="Name"></label>
+        </div>
+        <div class="col-4">
+            <input asp-for="Name" class="form-control" />
+        </div>
+        <div class="form-group">
+            @*<input ty‎pe="submit" class="btn btn-primary" value="Create" />*@
+            <button id="Button" type="submit" name="submit" formmethod="post" asp-route-id="@Model.Id" class="btn btn-primary">Update</button>
+            <a asp-action="Index" class="btn btn-success">Back</a>
+        </div>
+    </div>
+</form>
+
